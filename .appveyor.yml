@@ -17,12 +17,7 @@ environment:
   CARGO_HOME: $(RUST_DIR)\cargo
   RUSTUP_HOME: $(RUST_DIR)\rustup
   RUST_BACKTRACE: full
-  RUSTC_WRAPPER: sccache
   PYTHONPATH: third_party\python_packages
-  SCCACHE_BUCKET: deno-sccache
-  AWS_ACCESS_KEY_ID: AKIAIVRN52PLDBP55LBQ
-  AWS_SECRET_ACCESS_KEY:
-    secure: 8ybpi/y5qE2baChsCBhNHmykng3FitELAtTYOiqZd0mw38i88dzdAX8ETNtBogMV
   # GN and NINJA are required by https://crates.io/crates/cargo_gn
   GN: $(APPVEYOR_BUILD_FOLDER)/buildtools/win/gn.exe
   NINJA: $(APPVEYOR_BUILD_FOLDER)/third_party/depot_tools/ninja.exe
@@ -133,8 +128,7 @@ install:
       $env:DEPOT_TOOLS_WIN_TOOLCHAIN = "0"
 
   # Install a recent Node.js version.
-  # TODO(ry) Upgrade to v12 once Install-Produce supports it.
-  - ps: Install-Product -Product node -Version 10 -Platform x64
+  - ps: Install-Product -Product node -Version 12 -Platform x64
 
   # Make sure the right Python version is in PATH, and others are not.
   - ps: |-
@@ -184,11 +178,6 @@ before_build:
   # Download clang and gn, generate ninja files.
   - python tools\setup.py
 
-  # Start sccache, then throw away the S3 access key.
-  - ps: |-
-      sccache --start-server
-      $env:AWS_SECRET_ACCESS_KEY = $null
-
 build_script:
   # Build with Cargo first. Both builds produce a deno.exe in the same dir. We
   # want the final one (which gets tested and released) to be built by Ninja.
@@ -205,9 +194,6 @@ after_test:
   # Delete the the rollup cache, which is unreliable, so that it doesn't get
   # persisted in the appveyor cache.
   - ps: if (Get-SaveCache) { Delete-Tree "$env:DENO_BUILD_PATH\.rpt2_cache" }
-
-  # Stop sccache and show stats.
-  - ps: sccache --stop-server
 
   # Verify that the build is fully up-to-date. Running ninja should be a no-op.
   # This catches erroneous file cleanup, and incorrectly set up build deps.

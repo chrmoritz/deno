@@ -19,7 +19,7 @@ def binary_downloads():
     third_party.download_clang_format()
     third_party.download_clang()
     third_party.maybe_download_sysroot()
-    prebuilt.load_sccache()
+    # prebuilt.load_sccache()
 
 
 if __name__ == '__main__':
