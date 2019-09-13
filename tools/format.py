@@ -83,8 +83,7 @@ def yapf():
     print "yapf"
     qrun(
         [sys.executable, "third_party/python_packages/bin/yapf", "-i"] +
-        find_exts(["tools", "deno_typescript", "cli_snapshots"], [".py"],
-                  skip=["tools/clang"]),
+        find_exts(["tools", "deno_typescript", "cli_snapshots"], [".py"]),
         env=python_env())
 
 

@@ -28,5 +28,5 @@ run([
 run([
     sys.executable, "third_party/python_packages/pylint",
     "--rcfile=third_party/depot_tools/pylintrc"
-] + find_exts(["tools", "build_extra"], [".py"], skip=["tools/clang"]),
+] + find_exts(["tools", "deno_typescript", "cli_snapshots"], [".py"]),
     env=python_env())
