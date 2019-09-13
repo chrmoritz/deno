@@ -20,6 +20,11 @@ else:
 executable_suffix = ".exe" if os.name == "nt" else ""
 root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 tests_path = os.path.join(root_path, "tests")
+core_symlinks = [
+    "core/libdeno/build", "core/libdeno/build_overrides",
+    "core/libdeno/buildtools", "core/libdeno/testing",
+    "core/libdeno/third_party", "core/libdeno/tools"
+]
 
 
 def make_env(merge_env=None, env=None):

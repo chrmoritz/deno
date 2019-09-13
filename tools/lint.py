@@ -4,7 +4,7 @@
 
 import os
 import sys
-from util import enable_ansi_colors, find_exts, root_path, run
+from util import core_symlinks, enable_ansi_colors, find_exts, root_path, run
 from third_party import python_env
 
 enable_ansi_colors()
@@ -18,8 +18,7 @@ os.chdir(root_path)
 run([
     "python", cpplint, "--filter=-build/include_subdir",
     "--repository=core/libdeno"
-] + find_exts(["core"], [".cc", ".h"],
-              skip=["core/libdeno/build", "core/libdeno/third_party"]))
+] + find_exts(["core"], [".cc", ".h"], skip=core_symlinks))
 
 run([
     "node", eslint, "--max-warnings=0", "--ignore-pattern=core/libdeno/build/",

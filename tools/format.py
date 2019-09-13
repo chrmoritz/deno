@@ -6,7 +6,7 @@ import sys
 import argparse
 from third_party import google_env, python_env
 from third_party import clang_format_path, third_party_path
-from util import root_path, run, find_exts, platform
+from util import core_symlinks, root_path, run, find_exts, platform
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--js", help="only run prettier", action="store_true")
@@ -56,8 +56,7 @@ def clang_format():
     print "clang_format"
     qrun(
         [sys.executable, clang_format_path, "-i", "-style", "Google"] +
-        find_exts(["core"], [".cc", ".h"],
-                  skip=["core/libdeno/build", "core/libdeno/third_party"]),
+        find_exts(["core"], [".cc", ".h"], skip=core_symlinks),
         env={"CHROMIUM_BUILDTOOLS_PATH": "third_party/v8/buildtools"})
 
 
@@ -69,14 +68,12 @@ def rustfmt():
         rustfmt_config,
     ] + find_exts(["cli", "core", "tools", "deno_typescript", "cli_snapshots"],
                   [".rs"],
-                  skip=["core/libdeno/build", "core/libdeno/third_party"]))
+                  skip=core_symlinks))
 
 
 def gn_format():
     print "gn format"
-    for fn in find_exts(
-        ["core"], [".gn", ".gni"],
-            skip=["core/libdeno/build", "core/libdeno/third_party"]):
+    for fn in find_exts(["core"], [".gn", ".gni"], skip=core_symlinks):
         qrun(["third_party/depot_tools/gn", "format", fn[13:]],
              cwd=os.path.join(root_path, "core/libdeno"),
              env=google_env())
@@ -93,14 +90,12 @@ def yapf():
 
 def prettier():
     print "prettier"
-    files = find_exts([
-        ".github", "js", "tests", "tools", "website", "core",
-        "deno_typescript", "cli_snapshots"
-    ], [".js", ".json", ".ts", ".md"],
-                      skip=[
-                          "tools/clang", "js/deps", "js/gen",
-                          "core/libdeno/build", "core/libdeno/third_party"
-                      ])
+    files = find_exts(
+        [
+            ".github", "js", "tests", "tools", "website", "core",
+            "deno_typescript", "cli_snapshots"
+        ], [".js", ".json", ".ts", ".md"],
+        skip=["tools/clang", "js/deps", "js/gen"] + core_symlinks)
     qrun(["node", prettier_path, "--write", "--loglevel=error"] +
          ["rollup.config.js"] + files)
 
