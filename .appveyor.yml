@@ -1,5 +1,6 @@
 # Copyright 2018-2019 the Deno authors. All rights reserved. MIT license.
 version: '{build}.{branch}'
+image: Visual Studio 2019
 
 skip_branch_with_pr: true
 
@@ -7,7 +8,6 @@ clone_folder: C:\deno
 clone_depth: 1
 
 environment:
-  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
   DENO_BUILD_MODE: release
   DENO_BUILD_PATH: $(APPVEYOR_BUILD_FOLDER)\target\release
   DENO_THIRD_PARTY_PATH: $(APPVEYOR_BUILD_FOLDER)\third_party
@@ -73,16 +73,6 @@ cache:
 init:
   # Load utility functions
   - ps: Invoke-Expression $env:PS_UTILS
-
-  # Upgrade git.
-  # TODO: remove when Appveyor upgrades to version 2.19.2.windows.1 or higher.
-  - ps: |-
-      $git_setup_uri = "https://github.com/git-for-windows/git/releases/" +
-                       "download/v2.23.0.windows.1/Git-2.23.0-64-bit.exe"
-      Invoke-WebRequest -Uri $git_setup_uri -OutFile "$env:TEMP\git-setup.exe"
-      Start-Process -FilePath "$env:TEMP\git-setup.exe" `
-                    -ArgumentList "/verysilent"         `
-                    -Wait
 
   # Make git check out symlinks (not placeholder text files).
   - git config --global core.symlinks true
