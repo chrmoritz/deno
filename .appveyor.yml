@@ -160,13 +160,11 @@ before_build:
       $env:AWS_SECRET_ACCESS_KEY = $null
 
 build_script:
-  - cargo clippy --all-targets --release --locked -- -D clippy::all
-  - cargo build -vv --release --all-targets --locked
+  - dir
 
 test_script:
   - python tools\lint.py
   - python tools\test_format.py
-  - python tools\test.py
 
 after_test:
   # Stop sccache and show stats.

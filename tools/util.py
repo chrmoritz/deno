@@ -175,6 +175,7 @@ def find_exts(directories, extensions, skip=None):
     matches = []
     for directory in directories:
         for root, dirnames, filenames in os.walk(directory):
+            print "os.walk root:", root
             if root in skip:
                 dirnames[:] = []  # Don't recurse further into this directory.
                 continue

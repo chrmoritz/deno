@@ -75,8 +75,9 @@ def rustfmt():
 def gn_format():
     print "gn format"
     for fn in find_exts(
-        ["core/libdeno"], [".gn", ".gni"],
+        ["core"], [".gn", ".gni"],
             skip=["core/libdeno/build", "core/libdeno/third_party"]):
+        print "gn format file:", fn[13:]
         qrun(["third_party/depot_tools/gn", "format", fn[13:]],
              cwd=os.path.join(root_path, "core/libdeno"),
              env=google_env())
