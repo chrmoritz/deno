@@ -21,6 +21,9 @@ def main():
     os.chdir(root_path)
 
     args = parser.parse_args()
+    
+    if not os.path.exists(os.path.join(third_party_path, "v8")):
+        run(["git", "submodules", "update", "--init"])
 
     if args.no_binary_download:
         print "no binary download"
