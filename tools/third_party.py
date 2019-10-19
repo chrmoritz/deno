@@ -56,6 +56,9 @@ def google_env(env=None, merge_env=None, depot_tools_path_=depot_tools_path):
 
     # Depot_tools to be in the PATH, before Python.
     add_env_path(depot_tools_path_, env=env, prepend=True)
+    
+    # prevents issues with download_from_google_storage if set
+    env["AWS_CREDENTIAL_FILE"] = ""
 
     if os.name == "nt":  # Windows-only enviroment tweaks.
         # We're not using Google's internal infrastructure.
